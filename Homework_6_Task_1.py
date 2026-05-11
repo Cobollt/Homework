@@ -18,7 +18,7 @@ def total_salary(path):
             total += int(salary)
             count += 1
 
-        average = total / count if count != 0 else 0
+        average = total / count if count > 0 else 0
 
         return  total, average
 
@@ -29,5 +29,5 @@ def total_salary(path):
         print("Value error")
         return 0,0
 
-total, average = total_salary("path/to/salary_file.txt")
+total, average = total_salary("salary_file.txt")
 print(f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}")
