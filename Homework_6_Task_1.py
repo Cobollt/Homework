@@ -3,7 +3,7 @@ import sys
 from os import name
 
 
-def total_salsry(path):
+def total_salary(path):
     total = 0
     count = 0
 
@@ -11,8 +11,8 @@ def total_salsry(path):
         with open(path, "r", encoding="utf-8") as file:
             for line in file:
                 line = line.strip()
-            if not line:
-                continue
+                if not line:
+                    continue
 
             name, salary = line.split(",")
             total += int(salary)
