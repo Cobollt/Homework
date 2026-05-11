@@ -11,15 +11,12 @@ def total_salary(path):
         with open(path, "r", encoding="utf-8") as file:
             for line in file:
                 line = line.strip()
-                if not line:
-                    continue
+                if line:
+                    name, salary = line.split(",")
+                    total += int(salary)
+                    count += 1
 
-            name, salary = line.split(",")
-            total += int(salary)
-            count += 1
-
-        average = total / count if count > 0 else 0
-
+        average = total / count if count != 0 else 0
         return  total, average
 
     except FileNotFoundError:
