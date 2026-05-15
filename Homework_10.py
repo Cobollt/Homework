@@ -20,7 +20,8 @@ class Phone(Field):
 class Birthday (Field):
     def __init__(self, value):
         try:
-            datetime.strptime(value, '%D-%m-%Y')
+            datetime.strptime(value, '%d.%m.%Y')
+            super().__init__(value)
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
 
@@ -30,7 +31,7 @@ class Record:
         self.phones = []
         self.birthday = None
 
-    def add_phone(self, phone):
+    def add_phone(self, phone) -> None:
         self.phones.append(Phone(phone))
 
     def remove_phone(self, phone):
