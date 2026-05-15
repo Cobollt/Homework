@@ -35,9 +35,12 @@ def add_contact(args, book ):
         record.add_phone(phone)
     return message
 @input_error
-def change_contact(args, contacts):
-    name, phone = args
-    contacts[name] = phone
+def change_contact(args, book,):
+    name, old_number, new_numbers = args
+    record = book.find(name)
+    if record is None:
+        return "No contact."
+    record.edit_phone(old_number, new_numbers)
     return "Contact changed."
 @input_error
 def show_phones(args, contacts):
@@ -55,6 +58,11 @@ def main():
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
+
+        if not  user_input.strip():
+            print("Please enter a command.")
+            continue
+
         command, *args = parse_input(user_input)
         if command in ["close", "exit"]:
             print("Good bye!")
@@ -67,8 +75,8 @@ def main():
             print(change_contact(args, book))
         elif command == "phone":
             print(show_phones(args, book))
-        #elif command == "all":
-            #print(show_all(book))
+        elif command == "all":
+            print(show_all)
         else:
             print("Invalid command.")
 
