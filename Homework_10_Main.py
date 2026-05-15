@@ -1,5 +1,6 @@
 from Homework_10 import Record
 from Homework_10 import AddressBook
+from datetime import datetime, timedelta
 
 
 def parse_input(user_input):
@@ -43,13 +44,41 @@ def change_contact(args, book,):
     record.edit_phone(old_number, new_numbers)
     return "Contact changed."
 @input_error
-def show_phones(args, contacts):
+def show_phones(args, book):
     name = args[0]
-    return contacts[name]
+    return book.find(name)
 @input_error
-def show_all(contacts):
-    for name, phone in contacts.items():
-        print(f"{name}: {phone}")
+def show_all(book):
+    for record in book.data.values():
+        print(record)
+
+def add_birthday(args, book):
+    name, birthday, *_ = args
+    record = book.find(name)
+    record.add_birthday(birthday)
+    return "Birthday added."
+
+def show_birthday(args, book):
+    name = args[0]
+    record = book.find(name)
+    if record is None:
+        return "No contact."
+    if record.birthday is None:
+        return "Birthday not found."
+    return record.birthday.value
+
+def all_birthdays(book):
+    today = datetime.today().date()
+    next_weak = today + timedelta(days=7)
+    result = []
+    for record in book.data.values():
+        if record.birthday is not None:
+            birthday = datetime.strptime(record.birthday.value, "%d.%m.%Y").date()
+            birthday_this_year = birthday.replace(year=today.year)
+            if today <= birthday_this_year <= next_weak:
+                result.append(f"{record.name.value}: {record.birthday.value}.")
+    return "\n".join(result)
+
 
 
 def main():
@@ -76,7 +105,13 @@ def main():
         elif command == "phone":
             print(show_phones(args, book))
         elif command == "all":
-            print(show_all)
+            show_all(book)
+        elif command == "add-birthday":
+            print(add_birthday(args, book))
+        elif command == "show-birthday":
+            print(show_birthday( args, book))
+        elif command == "birthdays":
+            print(all_birthdays(book))
         else:
             print("Invalid command.")
 

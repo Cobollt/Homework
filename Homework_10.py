@@ -50,8 +50,14 @@ class Record:
                 return p
         return None
 
+    def add_birthday(self, birthday):
+        self.birthday = Birthday(birthday)
+
+    def find_birthday(self):
+        return self.birthday
+
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday.value}"
 
 class AddressBook(UserDict):
     def add_record(self, record):
