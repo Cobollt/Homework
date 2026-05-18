@@ -12,11 +12,15 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except ValueError:
-            if func.__name__ == "add_contact":
-                return "Give me name and phone please."
-            if func.__name__ == "change_contact":
-                return "Invalid Name."
+        except ValueError as e:
+            if "not enough values to unpack" in str(e):
+                if func.__name__ == "add_contact":
+                    return "Give me name and phone please."
+                if func.__name__ == "change_contact":
+                    return "Invalid Name."
+                if func.__name__ == "add_birthday":
+                    return "Give me name and birthday please."
+            return str(e)
         except KeyError as e:
             return "No contact."
         except IndexError as e:
@@ -35,6 +39,7 @@ def add_contact(args, book ):
     if phone:
         record.add_phone(phone)
     return message
+
 @input_error
 def change_contact(args, book,):
     name, old_number, new_numbers = args
@@ -43,21 +48,32 @@ def change_contact(args, book,):
         return "No contact."
     record.edit_phone(old_number, new_numbers)
     return "Contact changed."
+
 @input_error
 def show_phones(args, book):
     name = args[0]
-    return book.find(name)
-@input_error
-def show_all(book):
-    for record in book.data.values():
-        print(record)
+    record = book.find(name)
+    if record is None:
+        return "No contact."
+    return "; ".join(phone.value for phone in record.phones)
 
+@input_error
+def show_all(book) :
+    if not book.data:
+        return "Address book is empty."
+    result = []
+    for record in book.data.values():
+        result.append(str(record))
+    return "\n".join(result)
+
+@input_error
 def add_birthday(args, book):
     name, birthday, *_ = args
     record = book.find(name)
     record.add_birthday(birthday)
     return "Birthday added."
 
+@input_error
 def show_birthday(args, book):
     name = args[0]
     record = book.find(name)
@@ -67,6 +83,7 @@ def show_birthday(args, book):
         return "Birthday not found."
     return record.birthday.value
 
+@input_error
 def all_birthdays(book):
     today = datetime.today().date()
     next_weak = today + timedelta(days=7)
@@ -77,6 +94,8 @@ def all_birthdays(book):
             birthday_this_year = birthday.replace(year=today.year)
             if today <= birthday_this_year <= next_weak:
                 result.append(f"{record.name.value}: {record.birthday.value}.")
+            if not result:
+                return "No birthdays in the next 7 days."
     return "\n".join(result)
 
 
@@ -105,7 +124,7 @@ def main():
         elif command == "phone":
             print(show_phones(args, book))
         elif command == "all":
-            show_all(book)
+            print(show_all(book))
         elif command == "add-birthday":
             print(add_birthday(args, book))
         elif command == "show-birthday":
