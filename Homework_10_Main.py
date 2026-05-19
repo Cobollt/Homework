@@ -1,7 +1,5 @@
 from Homework_10 import Record
 from Homework_10 import AddressBook
-from datetime import datetime, timedelta
-
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -83,23 +81,6 @@ def show_birthday(args, book):
         return "Birthday not found."
     return record.birthday.value
 
-@input_error
-def all_birthdays(book):
-    today = datetime.today().date()
-    next_weak = today + timedelta(days=7)
-    result = []
-    for record in book.data.values():
-        if record.birthday is not None:
-            birthday = datetime.strptime(record.birthday.value, "%d.%m.%Y").date()
-            birthday_this_year = birthday.replace(year=today.year)
-            if today <= birthday_this_year <= next_weak:
-                result.append(f"{record.name.value}: {record.birthday.value}.")
-            if not result:
-                return "No birthdays in the next 7 days."
-    return "\n".join(result)
-
-
-
 def main():
     book = AddressBook()
 
@@ -130,7 +111,7 @@ def main():
         elif command == "show-birthday":
             print(show_birthday( args, book))
         elif command == "birthdays":
-            print(all_birthdays(book))
+            print(book.upcoming_birthdays())
         else:
             print("Invalid command.")
 

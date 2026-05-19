@@ -1,5 +1,5 @@
 from collections import UserDict
-from datetime import datetime
+from datetime import datetime,timedelta
 
 class Field:
     def __init__(self, value):
@@ -73,3 +73,18 @@ class AddressBook(UserDict):
     def delete(self, name):
         if name in self.data:
             del self.data[name]
+
+    def upcoming_birthdays(self):
+        today = datetime.today().date()
+        next_week = today + timedelta(days=7)
+        upcoming_list = []
+        for record in self.data.values():
+            if record.birthday is None:
+                continue
+            birthday = datetime.strptime(record.birthday.value,"%d.%m.%Y").date()
+            birthday_this_year = birthday.replace(year=today.year)
+            if birthday_this_year < today:
+                birthday_this_year = birthday_this_year.replace(year=today.year + 1)
+            if today <= birthday_this_year <= next_week:
+                upcoming_list.append({"name": record.name.value,"birthday": birthday_this_year.strftime("%d.%m.%Y")})
+        return upcoming_list
