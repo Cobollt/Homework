@@ -99,18 +99,15 @@ def birthdays(book) :
     birthdays = book.upcoming_birthdays()
     today = datetime.today().date()
     result = []
-
     for name, birthday in birthdays:
         next_birthday = birthday.replace(
             year=today.year if birthday.replace(year=today.year) >= today
-            else today.year + 1
-        )
-
+            else today.year + 1)
         if (next_birthday - today).days <= 7:
-            result.append((name, next_birthday))
+            record = book.find(name)
+            result.append(str(record))
+    return "\n".join(result)
 
-    result.sort(key=lambda item: item[1])
-    return result
 
 def main():
     book = load_data()
