@@ -1,6 +1,18 @@
+import pickle
 from Homework_12 import Record
 from Homework_12 import AddressBook
 from datetime import datetime
+
+def save_data(filename="addressbook.pkl", book):
+    with open(filename, "wb") as file:
+        pickle.dump(book, file)
+
+def load_data(filename="addressbook.pkl"):
+    try:
+        with open(filename, "rb") as file:
+            return pickle.load(file)
+    except FileNotFoundError:
+        return Addressbook()
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -101,7 +113,7 @@ def birthdays(book) :
     return result
 
 def main():
-    book = AddressBook()
+    book = load_data()
     commands = {
         "hello": lambda args: "How can I help you?",
         "add": lambda args: add_contact(args, book),
@@ -120,6 +132,7 @@ def main():
             continue
         command, *args = parse_input(user_input)
         if command in ["close", "exit"]:
+            save_data(book)
             print("Good bye!")
             break
         handler = commands.get(command)
