@@ -1,5 +1,5 @@
 from collections import UserDict
-from datetime import datetime
+from datetime import datetime,timedelta
 
 class Field:
     def __init__(self, value):
@@ -20,7 +20,7 @@ class Phone(Field):
 class Birthday (Field):
     def __init__(self, value):
         try:
-            datetime.strptime(value, '%d.%m.%Y')
+            value = datetime.strptime(value, '%d.%m.%Y').date()
             super().__init__(value)
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
@@ -73,3 +73,10 @@ class AddressBook(UserDict):
     def delete(self, name):
         if name in self.data:
             del self.data[name]
+
+    def upcoming_birthdays(self):
+        birthdays = []
+        for record in self.data.values():
+            if record.birthday:
+                birthdays.append((record.name.value, record.birthday.value))
+        return birthdays
