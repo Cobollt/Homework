@@ -102,35 +102,29 @@ def birthdays(book) :
 
 def main():
     book = AddressBook()
-
+    commands = {
+        "hello": lambda args: "How can I help you?",
+        "add": lambda args: add_contact(args, book),
+        "change": lambda args: change_contact(args, book),
+        "phone": lambda args: show_phones(args, book),
+        "all": lambda args: show_all(book),
+        "add-birthday": lambda args: add_birthday(args, book),
+        "show-birthday": lambda args: show_birthday(args, book),
+        "birthdays": lambda args: birthdays(book),
+    }
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
-
-        if not  user_input.strip():
+        if not user_input.strip():
             print("Please enter a command.")
             continue
-
         command, *args = parse_input(user_input)
         if command in ["close", "exit"]:
             print("Good bye!")
             break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command == "add":
-            print(add_contact(args, book))
-        elif command == "change":
-            print(change_contact(args, book))
-        elif command == "phone":
-            print(show_phones(args, book))
-        elif command == "all":
-            print(show_all(book))
-        elif command == "add-birthday":
-            print(add_birthday(args, book))
-        elif command == "show-birthday":
-            print(show_birthday( args, book))
-        elif command == "birthdays":
-            print(birthdays(book))
+        handler = commands.get(command)
+        if handler:
+            print(handler(args))
         else:
             print("Invalid command.")
 
