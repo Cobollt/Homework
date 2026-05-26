@@ -1,7 +1,6 @@
 from Homework_12 import Record
 from Homework_12 import AddressBook
-from datetime import datetime, timedelta
-
+from datetime import datetime
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -84,53 +83,48 @@ def show_birthday(args, book):
     return record.birthday.value
 
 @input_error
-def all_birthdays(book):
+def birthdays(book) :
+    birthdays = book.upcoming_birthdays()
     today = datetime.today().date()
-    next_weak = today + timedelta(days=7)
     result = []
-    for record in book.data.values():
-        if record.birthday is not None:
-            birthday = datetime.strptime(record.birthday.value, "%d.%m.%Y").date()
-            birthday_this_year = birthday.replace(year=today.year)
-            if today <= birthday_this_year <= next_weak:
-                result.append(f"{record.name.value}: {record.birthday.value}.")
-            if not result:
-                return "No birthdays in the next 7 days."
-    return "\n".join(result)
 
+    for name, birthday in birthdays:
+        next_birthday = birthday.replace(
+            year=today.year if birthday.replace(year=today.year) >= today
+            else today.year + 1
+        )
 
+        if (next_birthday - today).days <= 7:
+            result.append((name, next_birthday))
+
+    result.sort(key=lambda item: item[1])
+    return result
 
 def main():
     book = AddressBook()
-
+    commands = {
+        "hello": lambda args: "How can I help you?",
+        "add": lambda args: add_contact(args, book),
+        "change": lambda args: change_contact(args, book),
+        "phone": lambda args: show_phones(args, book),
+        "all": lambda args: show_all(book),
+        "add-birthday": lambda args: add_birthday(args, book),
+        "show-birthday": lambda args: show_birthday(args, book),
+        "birthdays": lambda args: birthdays(book),
+    }
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
-
-        if not  user_input.strip():
+        if not user_input.strip():
             print("Please enter a command.")
             continue
-
         command, *args = parse_input(user_input)
         if command in ["close", "exit"]:
             print("Good bye!")
             break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command == "add":
-            print(add_contact(args, book))
-        elif command == "change":
-            print(change_contact(args, book))
-        elif command == "phone":
-            print(show_phones(args, book))
-        elif command == "all":
-            print(show_all(book))
-        elif command == "add-birthday":
-            print(add_birthday(args, book))
-        elif command == "show-birthday":
-            print(show_birthday( args, book))
-        elif command == "birthdays":
-            print(all_birthdays(book))
+        handler = commands.get(command)
+        if handler:
+            print(handler(args))
         else:
             print("Invalid command.")
 
