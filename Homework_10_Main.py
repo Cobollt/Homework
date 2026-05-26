@@ -1,5 +1,6 @@
 from Homework_10 import Record
 from Homework_10 import AddressBook
+from datetime import datetime
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -80,6 +81,23 @@ def show_birthday(args, book):
     if record.birthday is None:
         return "Birthday not found."
     return record.birthday.value
+
+def birthdays(self) :
+    birthdays = super().upcoming_birthdays()
+    today = datetime.today().date()
+    result = []
+
+    for name, birthday in birthdays:
+        next_birthday = birthday.replace(
+            year=today.year if birthday.replace(year=today.year) >= today
+            else today.year + 1
+        )
+
+        if (next_birthday - today).days <= 7:
+            result.append((name, next_birthday))
+
+    result.sort(key=lambda item: item[1])
+    return result
 
 def main():
     book = AddressBook()

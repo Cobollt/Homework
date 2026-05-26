@@ -20,7 +20,7 @@ class Phone(Field):
 class Birthday (Field):
     def __init__(self, value):
         try:
-            datetime.strptime(value, '%d.%m.%Y')
+            value = datetime.strptime(value, '%d.%m.%Y').date()
             super().__init__(value)
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
@@ -75,16 +75,8 @@ class AddressBook(UserDict):
             del self.data[name]
 
     def upcoming_birthdays(self):
-        today = datetime.today().date()
-        next_week = today + timedelta(days=7)
-        upcoming_list = []
+        birthdays = []
         for record in self.data.values():
-            if record.birthday is None:
-                continue
-            birthday = datetime.strptime(record.birthday.value,"%d.%m.%Y").date()
-            birthday_this_year = birthday.replace(year=today.year)
-            if birthday_this_year < today:
-                birthday_this_year = birthday_this_year.replace(year=today.year + 1)
-            if today <= birthday_this_year <= next_week:
-                upcoming_list.append({"name": record.name.value,"birthday": birthday_this_year.strftime("%d.%m.%Y")})
-        return upcoming_list
+            if record.birthday:
+                birthdays.append((record.name.value, record.birthday.value))
+        return birthdays
