@@ -82,8 +82,8 @@ def show_birthday(args, book):
         return "Birthday not found."
     return record.birthday.value
 
-def birthdays(self) :
-    birthdays = super().upcoming_birthdays()
+def birthdays(book) :
+    birthdays = book.upcoming_birthdays()
     today = datetime.today().date()
     result = []
 
@@ -129,7 +129,7 @@ def main():
         elif command == "show-birthday":
             print(show_birthday( args, book))
         elif command == "birthdays":
-            print(book.upcoming_birthdays())
+            print(birthdays(book))
         else:
             print("Invalid command.")
 
