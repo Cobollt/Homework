@@ -3,7 +3,7 @@ from Homework_12 import Record
 from Homework_12 import AddressBook
 from datetime import datetime
 
-def save_data(filename="addressbook.pkl", book):
+def save_data(book, filename="addressbook.pkl"):
     with open(filename, "wb") as file:
         pickle.dump(book, file)
 
@@ -12,7 +12,7 @@ def load_data(filename="addressbook.pkl"):
         with open(filename, "rb") as file:
             return pickle.load(file)
     except FileNotFoundError:
-        return Addressbook()
+        return AddressBook()
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
