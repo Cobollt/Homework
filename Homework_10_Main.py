@@ -82,6 +82,7 @@ def show_birthday(args, book):
         return "Birthday not found."
     return record.birthday.value
 
+@input_error
 def birthdays(book) :
     birthdays = book.upcoming_birthdays()
     today = datetime.today().date()
