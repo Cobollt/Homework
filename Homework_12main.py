@@ -36,9 +36,9 @@ def input_error(func):
                 if func.__name__ == "add_birthday":
                     return "Give me name and birthday please."
             return str(e)
-        except KeyError as e:
+        except KeyError:
             return "No contact."
-        except IndexError as e:
+        except IndexError:
             return "Enter a name."
     return inner
 
