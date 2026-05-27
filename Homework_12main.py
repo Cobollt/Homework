@@ -3,9 +3,11 @@ from Homework_12 import Record
 from Homework_12 import AddressBook
 from datetime import datetime
 
+
 def save_data(book, filename="addressbook.pkl"):
     with open(filename, "wb") as file:
         pickle.dump(book, file)
+
 
 def load_data(filename="addressbook.pkl"):
     try:
@@ -14,10 +16,12 @@ def load_data(filename="addressbook.pkl"):
     except FileNotFoundError:
         return AddressBook()
 
+
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
+
 
 def input_error(func):
     def inner(*args, **kwargs):
@@ -38,8 +42,9 @@ def input_error(func):
             return "Enter a name."
     return inner
 
+
 @input_error
-def add_contact(args, book ):
+def add_contact(args, book):
     name, phone, *_ = args
     record = book.find(name)
     message = "Contact updated."
@@ -51,6 +56,7 @@ def add_contact(args, book ):
         record.add_phone(phone)
     return message
 
+
 @input_error
 def change_contact(args, book,):
     name, old_number, new_numbers = args
@@ -60,6 +66,7 @@ def change_contact(args, book,):
     record.edit_phone(old_number, new_numbers)
     return "Contact changed."
 
+
 @input_error
 def show_phones(args, book):
     name = args[0]
@@ -67,6 +74,7 @@ def show_phones(args, book):
     if record is None:
         return "No contact."
     return "; ".join(phone.value for phone in record.phones)
+
 
 @input_error
 def show_all(book) :
@@ -77,12 +85,14 @@ def show_all(book) :
         result.append(str(record))
     return "\n".join(result)
 
+
 @input_error
 def add_birthday(args, book):
     name, birthday, *_ = args
     record = book.find(name)
     record.add_birthday(birthday)
     return "Birthday added."
+
 
 @input_error
 def show_birthday(args, book):
@@ -93,6 +103,7 @@ def show_birthday(args, book):
     if record.birthday is None:
         return "Birthday not found."
     return record.birthday.value
+
 
 @input_error
 def birthdays(book) :
