@@ -6,7 +6,6 @@ class Field:
     def __init__(self, value):
         self.value = value
 
-
     def __str__(self):
         return str(self.value)
 
@@ -22,7 +21,7 @@ class Phone(Field):
         super().__init__(value)
 
 
-class Birthday (Field):
+class Birthday(Field):
     def __init__(self, value):
         try:
             value = datetime.strptime(value, '%d.%m.%Y').date()
@@ -37,14 +36,11 @@ class Record:
         self.phones = []
         self.birthday = None
 
-
     def add_phone(self, phone) -> None:
         self.phones.append(Phone(phone))
 
-
     def remove_phone(self, phone):
         self.phones = [p for p in self.phones if p.value != phone]
-
 
     def edit_phone(self, old_phone, new_phones):
         for p in self.phones:
@@ -53,21 +49,17 @@ class Record:
                 return
         raise ValueError("Phone not found")
 
-
     def find_phone(self, phone):
         for p in self.phones:
             if p.value == phone:
                 return p
         return None
 
-
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 
-
     def find_birthday(self):
         return self.birthday
-
 
     def __str__(self):
         birthday = self.birthday.value if self.birthday else "not added"
@@ -81,15 +73,12 @@ class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
 
-
     def find(self, name):
         return self.data.get(name)
-
 
     def delete(self, name):
         if name in self.data:
             del self.data[name]
-
 
     def upcoming_birthdays(self):
         birthdays = []

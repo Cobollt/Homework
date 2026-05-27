@@ -1,6 +1,5 @@
 import pickle
-from Homework_12 import Record
-from Homework_12 import AddressBook
+from Homework_12 import Record, AddressBook
 from datetime import datetime
 
 
@@ -58,7 +57,7 @@ def add_contact(args, book):
 
 
 @input_error
-def change_contact(args, book,):
+def change_contact(args, book):
     name, old_number, new_numbers = args
     record = book.find(name)
     if record is None:
@@ -77,7 +76,7 @@ def show_phones(args, book):
 
 
 @input_error
-def show_all(book) :
+def show_all(book):
     if not book.data:
         return "Address book is empty."
     result = []
@@ -106,7 +105,7 @@ def show_birthday(args, book):
 
 
 @input_error
-def birthdays(book) :
+def birthdays(book):
     birthdays = book.upcoming_birthdays()
     today = datetime.today().date()
     result = []
@@ -123,14 +122,14 @@ def birthdays(book) :
 def main():
     book = load_data()
     commands = {
-        "hello": lambda args: "How can I help you?",
-        "add": lambda args: add_contact(args, book),
-        "change": lambda args: change_contact(args, book),
-        "phone": lambda args: show_phones(args, book),
-        "all": lambda args: show_all(book),
-        "add-birthday": lambda args: add_birthday(args, book),
-        "show-birthday": lambda args: show_birthday(args, book),
-        "birthdays": lambda args: birthdays(book),
+        "hello": lambda command_args: "How can I help you?",
+        "add": lambda command_args: add_contact(command_args, book),
+        "change": lambda command_args: change_contact(command_args, book),
+        "phone": lambda command_args: show_phones(command_args, book),
+        "all": lambda command_args: show_all(book),
+        "add-birthday": lambda command_args: add_birthday(command_args, book),
+        "show-birthday": lambda command_args: show_birthday(command_args, book),
+        "birthdays": lambda command_args: birthdays(book),
     }
     print("Welcome to the assistant bot!")
     while True:
