@@ -81,8 +81,16 @@ class AddressBook(UserDict):
             del self.data[name]
 
     def upcoming_birthdays(self):
+        today = datetime.today().date()
         birthdays = []
         for record in self.data.values():
             if record.birthday:
-                birthdays.append((record.name.value, record.birthday.value))
+                birthday = record.birthday.value
+                next_birthday = birthday.replace(
+                    year=today.year
+                    if birthday.replace(year=today.year) >= today
+                    else today.year + 1
+                )
+                if (next_birthday - today).days <= 7:
+                    birthdays.append(record)
         return birthdays

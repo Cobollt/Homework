@@ -1,6 +1,4 @@
 import pickle
-from datetime import datetime
-
 from Homework_12 import Record, AddressBook
 
 
@@ -107,16 +105,9 @@ def show_birthday(args, book):
 
 @input_error
 def birthdays(book):
-    birthdays = book.upcoming_birthdays()
-    today = datetime.today().date()
     result = []
-    for name, birthday in birthdays:
-        next_birthday = birthday.replace(
-            year=today.year if birthday.replace(year=today.year) >= today
-            else today.year + 1)
-        if (next_birthday - today).days <= 7:
-            record = book.find(name)
-            result.append(str(record))
+    for record in book.upcoming_birthdays():
+        result.append(str(record))
     return "\n".join(result)
 
 
